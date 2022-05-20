@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -66,4 +67,18 @@ public class CardController {
 
         return ResponseEntity.status(HttpStatus.OK).body(cardService.save(cardModel));
     }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value = "id") UUID id){
+        Optional<CardModel> cardModelOptional = cardService.findById(id);
+        if (!cardModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card not found.");
+        }
+        cardService.delete(cardModelOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Card deleted successfully.");
+    }
+
+
+
 }

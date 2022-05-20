@@ -33,4 +33,8 @@ public class CardService {
         return cardRepository.findById(id);
     }
 
+    @Transactional
+    public void delete(CardModel cardModel) {
+        cardRepository.delete(cardModel);
+    }
 }
