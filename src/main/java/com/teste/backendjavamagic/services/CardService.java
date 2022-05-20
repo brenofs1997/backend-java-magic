@@ -2,6 +2,8 @@ package com.teste.backendjavamagic.services;
 
 import com.teste.backendjavamagic.models.CardModel;
 import com.teste.backendjavamagic.repositories.CardRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,4 +24,13 @@ public class CardService {
     public CardModel save(CardModel cardModel) {
         return cardRepository.save(cardModel);
     }
+
+    public Page<CardModel> findAll(Pageable pageable) {
+        return cardRepository.findAll(pageable);
+    }
+
+    public Optional<CardModel> findById(UUID id) {
+        return cardRepository.findById(id);
+    }
+
 }

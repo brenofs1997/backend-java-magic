@@ -4,6 +4,10 @@ import com.teste.backendjavamagic.dtos.CardDto;
 import com.teste.backendjavamagic.models.CardModel;
 import com.teste.backendjavamagic.services.CardService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +16,8 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -38,5 +44,26 @@ public class CardController {
         BeanUtils.copyProperties(cardDto, cardModel);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cardService.save(cardModel));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<CardModel>> getAllParkingSpots(
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC)
+                    Pageable pageable){
+                          return ResponseEntity.status(HttpStatus.OK).body(cardService.findAll(pageable));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateParkingSpot(@PathVariable(value = "id") UUID id,
+                                                    @RequestBody @Valid CardDto cardDto){
+        Optional<CardModel> cardModelOptional = cardService.findById(id);
+        if (!cardModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card not found.");
+        }
+        var cardModel = new CardModel();
+        BeanUtils.copyProperties(cardDto, cardModel);
+        cardModel.setId(cardModelOptional.get().getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(cardService.save(cardModel));
     }
 }
