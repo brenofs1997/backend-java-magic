@@ -32,15 +32,7 @@ public class CardController {
 
     @PostMapping
     public ResponseEntity<Object> saveCard(@RequestBody @Valid CardDto cardDto){
-      /*  if(cardService.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: License Plate Car is already in use!");
-        }
-        if(cardService.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot is already in use!");
-        }
-        if(cardService.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot already registered for this apartment/block!");
-        }*/
+
         var cardModel = new CardModel();
         BeanUtils.copyProperties(cardDto, cardModel);
 
@@ -48,14 +40,22 @@ public class CardController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CardModel>> getAllParkingSpots(
+    public ResponseEntity<Page<CardModel>> getAllCards(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC)
                     Pageable pageable){
                           return ResponseEntity.status(HttpStatus.OK).body(cardService.findAll(pageable));
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getCardByID(@PathVariable(value = "id") UUID id){
+        Optional<CardModel> cardModelOptional = cardService.findById(id);
+        if (!cardModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card not found.");
+        }
 
+        return ResponseEntity.status(HttpStatus.OK).body(cardModelOptional.get());
+    }
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateParkingSpot(@PathVariable(value = "id") UUID id,
+    public ResponseEntity<Object> updateCard(@PathVariable(value = "id") UUID id,
                                                     @RequestBody @Valid CardDto cardDto){
         Optional<CardModel> cardModelOptional = cardService.findById(id);
         if (!cardModelOptional.isPresent()) {
@@ -70,7 +70,7 @@ public class CardController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value = "id") UUID id){
+    public ResponseEntity<Object> deleteCard(@PathVariable(value = "id") UUID id){
         Optional<CardModel> cardModelOptional = cardService.findById(id);
         if (!cardModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card not found.");

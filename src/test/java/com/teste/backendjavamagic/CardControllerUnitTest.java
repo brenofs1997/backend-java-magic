@@ -17,15 +17,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = CardController.class)
 public class CardControllerUnitTest {
@@ -62,7 +67,7 @@ public class CardControllerUnitTest {
         card.setIdioma("português");
         card.setQtde_semelhantes(1);
 
-        Mockito.when(cardRepository.save(card)).thenReturn(card);
+        when(cardRepository.save(card)).thenReturn(card);
 
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -76,4 +81,8 @@ public class CardControllerUnitTest {
 
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
+
+
+
+
 }
