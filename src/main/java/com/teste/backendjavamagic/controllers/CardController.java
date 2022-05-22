@@ -61,19 +61,26 @@ public class CardController {
         if (!cardModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card not found.");
         }
+        if (!cardModelOptional.get().getNomeJogador().equals(cardDto.getNomeJogador())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não é possivel alterar o card de outro jogador.");
+        }
         var cardModel = new CardModel();
         BeanUtils.copyProperties(cardDto, cardModel);
         cardModel.setId(cardModelOptional.get().getId());
+        cardModel.setNomeJogador(cardModelOptional.get().getNomeJogador());
 
         return ResponseEntity.status(HttpStatus.OK).body(cardService.save(cardModel));
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCard(@PathVariable(value = "id") UUID id){
+    @DeleteMapping("/{id}&{nomeJogador}")
+    public ResponseEntity<Object> deleteCard(@PathVariable(value = "id") UUID id,@PathVariable(value = "nomeJogador") String nomeJogador){
         Optional<CardModel> cardModelOptional = cardService.findById(id);
         if (!cardModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card not found.");
+        }
+        if (!cardModelOptional.get().getNomeJogador().equals(nomeJogador)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não é possivel alterar o card de outro jogador.");
         }
         cardService.delete(cardModelOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Card deleted successfully.");

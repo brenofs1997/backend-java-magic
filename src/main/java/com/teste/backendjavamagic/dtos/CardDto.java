@@ -12,6 +12,9 @@ public class CardDto {
     @NotEmpty(message = "Name may not be empty")
     @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters long")
     private String nome;
+    @NotEmpty(message = "nomeJogador may not be empty")
+    @Size(min = 1, max = 50, message = "nomeJogador must be between 1 and 50 characters long")
+    private String nomeJogador;
     @NotBlank
     private String edicao;
     @NotBlank
@@ -20,15 +23,23 @@ public class CardDto {
     private Boolean  foil;
 
 
-    @NotNull(message = "Name may not be null")
+    @NotNull(message = "preco may not be null")
     @Range(min = 1)
     private BigDecimal preco;
 
-    @Positive
+    @NotNull(message = "qtde_semelhantes may not be null")
     private Integer qtde_semelhantes;
 
     public String getNome() {
         return nome;
+    }
+
+    public String getNomeJogador() {
+        return nomeJogador;
+    }
+
+    public void setNomeJogador(String nomeJogador) {
+        this.nomeJogador = nomeJogador;
     }
 
     public void setNome(String nome) {

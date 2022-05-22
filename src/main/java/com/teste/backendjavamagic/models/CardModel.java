@@ -17,6 +17,8 @@ public class CardModel implements Serializable {
     private UUID id;
     @Column(nullable = false, length = 50)
     private String nome;
+    @Column(nullable = false, length = 130)
+    private String nomeJogador;
     @Column(nullable = false, length = 50)
     private String edicao;
     @Column(nullable = false, length = 10)
@@ -35,6 +37,14 @@ public class CardModel implements Serializable {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getNomeJogador() {
+        return nomeJogador;
+    }
+
+    public void setNomeJogador(String nomeJogador) {
+        this.nomeJogador = nomeJogador;
     }
 
     public String getNome() {
